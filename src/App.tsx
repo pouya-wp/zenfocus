@@ -341,49 +341,8 @@ Features:
             <span className="opacity-75">{getGreeting()}</span>
           </div>
         </div>
-
-        {/* Dynamic Focus Controls */}
-        <div className="flex items-center gap-3">
-          {/* Quick Info text */}
-          <div className="hidden md:block text-right">
-            <p className="text-[10px] font-mono opacity-50 uppercase tracking-widest">screensaver auto-dim</p>
-            <p className="text-xs font-mono font-medium opacity-75">15 Seconds Inactivity</p>
-          </div>
-
-          {/* Blackout button */}
-          <button
-            onClick={() => setShowManualBlackout(true)}
-            className="p-3 rounded-full bg-white/5 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/30 border border-white/10 transition-all cursor-pointer active:scale-95"
-            title="Immediate Dark Screen Saver"
-          >
-            <Moon size={15} />
-          </button>
-
-          {/* Quick Dim status indicator */}
-          <div
-            className="px-3.5 py-2 rounded-xl text-xs font-mono flex items-center gap-1.5 bg-white/5 border border-white/10"
-            title="Dashboard wake up alert status"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="opacity-85 text-[10px] tracking-wider font-semibold uppercase">Live Active</span>
-          </div>
-        </div>
       </header>
 
-      {/* --- INACTIVITY NOTIFICATION OVERLAY --- */}
-      {isIdle && (
-        <div className="absolute inset-x-0 top-12 z-20 flex justify-center pointer-events-none animate-fade-in">
-          <div className="px-5 py-2.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-center shadow-lg transition-all">
-            <p className="text-[11px] font-mono text-white/50 tracking-wider flex items-center justify-center gap-1.5">
-              <EyeOff size={12} className="text-violet-400" />
-              SCREENSAVER ACTIVE • MOVE MOUSE OR KEY TO RESTORE
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* --- MOUNTED PERSISTENT DIALOGS & POPUPS --- */}
       {/* 
@@ -520,8 +479,6 @@ Features:
           isIdle ? 'opacity-0 translate-y-[20px] pointer-events-none' : 'opacity-100 translate-y-0'
         }`}
       >
-        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: themePreset.accentColor }} />
-        <span>ZenClock Sanctuary Canvas • Flocus Inspired design</span>
       </footer>
     </div>
   );
