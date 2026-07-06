@@ -1,0 +1,32 @@
+name: Extract Zip Directly
+on:
+  push:
+    branches: [ main ] # یا هر برنچی که فایل زیپ توشه (مثلاً master)
+
+jobs:
+  unzip-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Unzip File
+        run: |
+          # اسم فایل زیپ خودت رو به جای project.zip بذار
+          # نقطه (.) یعنی همینجا توی پوشه اصلی اکسترکت بشه
+          unzip -o zenfocus-clock-screensaver (1).zip -d . 
+          
+          # اگر می‌خوای بعد از اکسترکت شدن، خود فایل زیپ پاک بشه این خط رو نگه دار:
+          rm project.zip
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .
+          # بررسی می‌کنه اگر فایلی تغییر کرده کامیت کنه که ارور نده
+          git diff-index --quiet HEAD || git commit -m "Auto-extracted zip file via GitHub Actions"
+          git push origin main # اسم برنچت رو اگر main نیست تغییر بده
