@@ -6,16 +6,17 @@ on:
 jobs:
   unzip-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # دادن دسترسی برای پوش کردن تغییرات
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unzip File
         run: |
-          unzip -o zenfocus-clock-screensaver (1).zip -d . 
-          rm zenfocus-clock-screensaver (1).zip
+          # گذاشتن اسم فایل داخل کوتیشن برای حل مشکل پرانتز و فاصله
+          unzip -o "zenfocus-clock-screensaver (1).zip" -d . 
+          rm -f "zenfocus-clock-screensaver (1).zip"
 
       - name: Commit and Push changes
         run: |
@@ -24,4 +25,4 @@ jobs:
           
           git add .
           git diff-index --quiet HEAD || git commit -m "Auto-extracted zip file via GitHub Actions"
-          git push origin main 
+          git push origin main
