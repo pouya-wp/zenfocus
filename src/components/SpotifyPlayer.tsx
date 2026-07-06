@@ -11,7 +11,7 @@ interface SpotifyPlayerProps {
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
   const [playlistInput, setPlaylistInput] = useState('');
   
-  // لینک پیش‌فرض اولیه تصحیح شده با پارامترهای ابعاد بزرگ
+  // دقیقاً همان لینک پیش‌فرض اولیه‌ی خودت بدون تغییر هاست‌نیم
   const [playlistUrl, setPlaylistUrl] = useState(() => {
     return localStorage.getItem('zenclock_spotify_playlistUrl') || 
       'https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?utm_source=generator&theme=0';
@@ -22,17 +22,20 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
     localStorage.setItem('zenclock_spotify_playlistUrl', playlistUrl);
   }, [playlistUrl]);
 
-  // تابع کمکی برای تزریق اتوماتیک پارامترهای ساختار بزرگ به لینک اسپاتیفای
+  // این تابع بدون دستکاری دامنه، فقط فرمت مسیر و پارامتر سایز رو اصلاح می‌کنه
   const formatSpotifyEmbedUrl = (rawUrl: string): string => {
-    const urlObj = new URL(rawUrl.trim());
+    let cleaned = rawUrl.trim();
+    const urlObj = new URL(cleaned);
     let pathname = urlObj.pathname;
 
     if (!pathname.startsWith('/embed')) {
       pathname = `/embed${pathname}`;
     }
 
-    // اضافه کردن حتمی utm_source=generator برای اجبار به رندر بزرگ بالای 152px
-    return `https://open.spotify.com/embed${pathname.replace('/embed/embed', '/embed')}?utm_source=generator&theme=0`;
+    const cleanPath = pathname.replace('/embed/embed', '/embed');
+    
+    // حفظ دقیق پروتکل و دامنه اصلی ورودی + تزریق پارامتر سایز بزرگ
+    return `${urlObj.protocol}//${urlObj.hostname}${cleanPath}?utm_source=generator&theme=0`;
   };
 
   const handleLoadPlaylist = () => {
@@ -43,8 +46,10 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
 
     try {
       let cleaned = playlistInput.trim();
+      
+      // بررسی ساده بر اساس ساختار ورودی خودت
       if (!cleaned.includes('spotify.com')) {
-        setError('Must be a valid spotify.com link');
+        setError('Must be a valid Spotify link');
         return;
       }
 
@@ -67,12 +72,12 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
     }
   };
 
-  // لیست لینک‌های پیش‌فرض
+  // بازگرداندن دقیق دامنه‌ها به همان ساختاری که خودت تعریف کرده بودی
   const defaultPlaylists = [
-    { name: 'Lofi Beats', url: 'https://open.spotify.com/playlist/37i9dQZF1DX8Ueb9Cj9P7s' },
-    { name: 'Deep Focus', url: 'https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO' },
-    { name: 'Chill Vibes', url: 'https://open.spotify.com/playlist/37i9dQZF1DX889fa78tGgA' },
-    { name: 'Ambient Sleep', url: 'https://open.spotify.com/playlist/37i9dQZF1DX4g83MvURwsq' },
+    { name: 'Lofi Beats', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=0' },
+    { name: 'Deep Focus', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKFB6uYW6g?theme=0' },
+    { name: 'Chill Vibes', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYsnTv9g73?theme=0' },
+    { name: 'Ambient Sleep', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DWYcDQ8h9u7aa?theme=0' },
   ];
 
   return (
@@ -114,7 +119,6 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
         <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
           {/* Left panel: player */}
           <div className="flex-1 p-5 flex flex-col justify-between">
-            {/* رپ‌پر آی‌فریم: با تغییر دادن پس‌زمینه و میزان اوپاسیتی خود آی‌فریم، حس شیشه‌ای و شفافیت ۲۰ درصدی القا میشه */}
             <div className="flex-1 rounded-2xl overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative min-h-[220px]">
               <iframe
                 src={playlistUrl}
