@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Music, RefreshCw, X, ChevronRight, HelpCircle, AlertCircle } from 'lucide-react';
+import { Music, RefreshCw, X, ChevronRight, AlertCircle } from 'lucide-react';
 
 interface SpotifyPlayerProps {
   isOpen: boolean;
@@ -10,6 +10,8 @@ interface SpotifyPlayerProps {
 
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
   const [playlistInput, setPlaylistInput] = useState('');
+  
+  // لینک پیش‌فرض اولیه تصحیح شده با پارامترهای ابعاد بزرگ
   const [playlistUrl, setPlaylistUrl] = useState(() => {
     return localStorage.getItem('zenclock_spotify_playlistUrl') || 
       'https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?utm_source=generator&theme=0';
@@ -20,6 +22,19 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
     localStorage.setItem('zenclock_spotify_playlistUrl', playlistUrl);
   }, [playlistUrl]);
 
+  // تابع کمکی برای تزریق اتوماتیک پارامترهای ساختار بزرگ به لینک اسپاتیفای
+  const formatSpotifyEmbedUrl = (rawUrl: string): string => {
+    const urlObj = new URL(rawUrl.trim());
+    let pathname = urlObj.pathname;
+
+    if (!pathname.startsWith('/embed')) {
+      pathname = `/embed${pathname}`;
+    }
+
+    // اضافه کردن حتمی utm_source=generator برای اجبار به رندر بزرگ بالای 152px
+    return `https://open.spotify.com/embed${pathname.replace('/embed/embed', '/embed')}?utm_source=generator&theme=0`;
+  };
+
   const handleLoadPlaylist = () => {
     if (!playlistInput.trim()) {
       setError('Please enter a Spotify URL');
@@ -28,22 +43,12 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
 
     try {
       let cleaned = playlistInput.trim();
-      // Remove query parameters to cleanly parse
-      const urlObj = new URL(cleaned);
-      
-      if (!urlObj.hostname.includes('spotify.com')) {
+      if (!cleaned.includes('spotify.com')) {
         setError('Must be a valid spotify.com link');
         return;
       }
 
-      let pathname = urlObj.pathname;
-      // Convert standard URL into embed format
-      // e.g., /playlist/37i9dQZF1DX8Ueb9Cj9P7s -> /embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s
-      if (!pathname.startsWith('/embed')) {
-        pathname = `/embed${pathname}`;
-      }
-
-      const finalEmbedUrl = `https://${urlObj.hostname}${pathname}${urlObj.search ? urlObj.search + '&theme=0' : '?theme=0'}`;
+      const finalEmbedUrl = formatSpotifyEmbedUrl(cleaned);
       setPlaylistUrl(finalEmbedUrl);
       setPlaylistInput('');
       setError('');
@@ -52,16 +57,22 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
     }
   };
 
-  const loadDefaultPlaylist = (url: string) => {
-    setPlaylistUrl(url);
-    setError('');
+  const loadDefaultPlaylist = (rawUrl: string) => {
+    try {
+      const formatted = formatSpotifyEmbedUrl(rawUrl);
+      setPlaylistUrl(formatted);
+      setError('');
+    } catch (e) {
+      setPlaylistUrl(rawUrl);
+    }
   };
 
+  // لیست لینک‌های پیش‌فرض
   const defaultPlaylists = [
-    { name: 'Lofi Beats', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=0' },
-    { name: 'Deep Focus', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKFB6uYW6g?theme=0' },
-    { name: 'Chill Vibes', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYsnTv9g73?theme=0' },
-    { name: 'Ambient Sleep', url: 'https://open.spotify.com/embed/playlist/37i9dQZF1DWYcDQ8h9u7aa?theme=0' },
+    { name: 'Lofi Beats', url: 'https://open.spotify.com/playlist/37i9dQZF1DX8Ueb9Cj9P7s' },
+    { name: 'Deep Focus', url: 'https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO' },
+    { name: 'Chill Vibes', url: 'https://open.spotify.com/playlist/37i9dQZF1DX889fa78tGgA' },
+    { name: 'Ambient Sleep', url: 'https://open.spotify.com/playlist/37i9dQZF1DX4g83MvURwsq' },
   ];
 
   return (
@@ -103,7 +114,8 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
         <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
           {/* Left panel: player */}
           <div className="flex-1 p-5 flex flex-col justify-between">
-            <div className="flex-1 rounded-2xl overflow-hidden bg-black/20 relative min-h-[220px]">
+            {/* رپ‌پر آی‌فریم: با تغییر دادن پس‌زمینه و میزان اوپاسیتی خود آی‌فریم، حس شیشه‌ای و شفافیت ۲۰ درصدی القا میشه */}
+            <div className="flex-1 rounded-2xl overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative min-h-[220px]">
               <iframe
                 src={playlistUrl}
                 width="100%"
@@ -112,7 +124,8 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
                 title="Spotify Ambient Player"
-                className="w-full h-full rounded-2xl"
+                className="w-full h-full rounded-2xl opacity-85 hover:opacity-100 transition-opacity duration-300"
+                style={{ minHeight: '100%' }}
               ></iframe>
             </div>
 
@@ -127,7 +140,7 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
             </div>
           </div>
 
-          {/* Right panel: custom playlist loaders & defaults */}
+          {/* Right panel */}
           <div className={`w-full md:w-64 border-t md:border-t-0 md:border-l border-white/10 dark:border-black/5 p-5 flex flex-col justify-between ${
             isDark ? 'bg-black/10' : 'bg-white/10'
           }`}>
