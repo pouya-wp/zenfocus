@@ -9,8 +9,6 @@ interface SpotifyPlayerProps {
 }
 
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
-  
-const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=09";
   return (
     <div
       style={{ display: isOpen ? 'flex' : 'none' }}
@@ -19,7 +17,7 @@ const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9
       }`}
     >
       <div
-        className={`w-full max-w-2xl rounded-[2.5rem] shadow-2xl pointer-events-auto overflow-hidden flex flex-col h-[520px] transition-all duration-500 ${
+        className={`w-full max-w-2xl rounded-[2.5rem] shadow-2xl pointer-events-auto overflow-hidden flex flex-col transition-all duration-500 ${
           isDark ? 'glass-panel text-gray-100' : 'glass-panel-light text-gray-800'
         }`}
       >
@@ -46,23 +44,21 @@ const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9
           </button>
         </div>
 
-        {/* Content - تک‌پلیمرِ تمام‌صفحه بدون سایدبار پریست */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden p-6">
-          <div className="flex-1 rounded-[1.8rem] overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative h-full w-full">
-            <iframe
-              src={targetPlaylist}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        {/* Content - اینجکت دقیق آی‌فریم ارسالی شما */}
+        <div className="flex-1 flex flex-col p-6">
+          <div className="rounded-[1.8rem] overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative w-full h-[352px]">
+            <iframe 
+              data-testid="embed-iframe" 
+              style={{ borderRadius: "12px", border: "none" }} 
+              src="https://open.spotify.com/embed/artist/5CEosSs2y4M9THNGI6mej8?utm_source=generator&si=980153507d864cad" 
+              width="100%" 
+              height="352" 
+              frameBorder="0" 
+              allowFullScreen={true} 
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
               loading="lazy"
               title="Spotify Ambient Player"
-              className="w-full h-full rounded-[1.8rem] opacity-90 hover:opacity-100 transition-opacity duration-300 absolute inset-0"
-              style={{ 
-                height: '100%', 
-                minHeight: '100%',
-                border: 'none'
-              }}
+              className="w-full h-full opacity-95 hover:opacity-100 transition-opacity duration-300"
             ></iframe>
           </div>
 
