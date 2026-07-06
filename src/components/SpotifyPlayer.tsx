@@ -10,8 +10,9 @@ interface SpotifyPlayerProps {
 
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
   
-  // آدرس اختصاصی و فیکس شده شما با متد دسترسی کامل دسکتاپ برای شکستن قفل ۱۵۲ پیکسلی
-  const targetPlaylist = "https://open.spotify.com/artist/5CEosSs2y4M9THNGI6mej8?utm_source=generator&view=desktop&theme=0";
+  // متصل کردن مستقیم آی‌فریم به اندپوینت پروکسیِ ورسل شما
+  // این آدرس، هدرهای ضد آی‌فریمِ لینک اصلی شما رو برمی‌داره
+  const proxiedSrc = "/api/proxy";
 
   return (
     <div
@@ -48,11 +49,11 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
           </button>
         </div>
 
-        {/* Content - بخش پریست‌ها کلاً حذف شد و حالا پلیر فول‌اسپیس است */}
+        {/* Content */}
         <div className="flex-1 flex flex-col h-full overflow-hidden p-6">
           <div className="flex-1 rounded-[1.8rem] overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative h-full w-full">
             <iframe
-              src={targetPlaylist}
+              src={proxiedSrc}
               width="100%"
               height="100%"
               frameBorder="0"
