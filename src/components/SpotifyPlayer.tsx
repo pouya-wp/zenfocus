@@ -61,16 +61,6 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
               className="w-full h-full opacity-95 hover:opacity-100 transition-opacity duration-300"
             ></iframe>
           </div>
-
-          {/* Note about playback */}
-          <div className={`mt-4 p-3 rounded-2xl flex gap-2 items-start text-xs leading-relaxed ${
-            isDark ? 'bg-white/5' : 'bg-black/5'
-          }`}>
-            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-400" />
-            <p className="opacity-75">
-              Note: Standard iframe browser security requires logging into your Spotify account in this browser window to play full songs instead of previews.
-            </p>
-          </div>
         </div>
       </div>
     </div>
