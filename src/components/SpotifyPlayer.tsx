@@ -10,9 +10,8 @@ interface SpotifyPlayerProps {
 
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
   
-  // متصل کردن مستقیم آی‌فریم به اندپوینت پروکسیِ ورسل شما
-  // این آدرس، هدرهای ضد آی‌فریمِ لینک اصلی شما رو برمی‌داره
-  const proxiedSrc = "/api/proxy";
+  // تبدیل لینک معمولی آرتیست به فرمت استاندارد امبد برای عبور از سد امنیتی مرورگر
+  const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=08";
 
   return (
     <div
@@ -49,11 +48,11 @@ export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: 
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content - تک‌پلیمرِ تمام‌صفحه بدون سایدبار پریست */}
         <div className="flex-1 flex flex-col h-full overflow-hidden p-6">
           <div className="flex-1 rounded-[1.8rem] overflow-hidden bg-black/10 dark:bg-white/5 backdrop-blur-sm relative h-full w-full">
             <iframe
-              src={proxiedSrc}
+              src={targetPlaylist}
               width="100%"
               height="100%"
               frameBorder="0"
