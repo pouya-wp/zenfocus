@@ -10,9 +10,7 @@ interface SpotifyPlayerProps {
 
 export default function SpotifyPlayer({ isOpen, onClose, accentColor, isDark }: SpotifyPlayerProps) {
   
-  // تبدیل لینک معمولی آرتیست به فرمت استاندارد امبد برای عبور از سد امنیتی مرورگر
-  const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=08";
-
+const targetPlaylist = "https://open.spotify.com/embed/playlist/37i9dQZF1DX8Ueb9Cj9P7s?theme=09";
   return (
     <div
       style={{ display: isOpen ? 'flex' : 'none' }}
