@@ -1,0 +1,6 @@
+{
+  "name": "ZenFocus Clock Screensaver",
+  "description": "An expressive Material Design 3 personal dashboard and clock screensaver with customizable aesthetics, widgets, and persistent Spotify player, todo lists, and notes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
